@@ -47,3 +47,48 @@ const findRoutes = routes => {
 }
 
 // or
+
+function findRoutes(routes) {
+  const { sourcesMap, destinationsMap } = createRoutesMaps(routes);
+  const startingPoint = findStartingPoint(sourcesMap, routes);
+  const agentRoute = simulateRouteFrom(startingPoint, destinationsMap);
+
+  return agentRoute.join(', ');
+}
+
+function simulateRouteFrom(startingPoint, destinationsMap) {
+  const routes = [startingPoint];
+  let destination = startingPoint;
+
+  while (destination) {
+    destination = destinationsMap.get(destination);
+
+    if (destination) {
+      routes.push(destination);
+    }
+  }
+
+  return routes;
+}
+
+function findStartingPoint(sourcesMap, routes) {
+  for (const [source] of routes) {
+    if (!sourcesMap.has(source)) {
+      return source;
+    }
+  }
+}
+
+function createRoutesMaps(routes) {
+  const sourcesMap = new Map();
+  const destinationsMap = new Map();
+
+  routes.forEach(route => {
+    const [source, destination] = route;
+
+    sourcesMap.set(destination, source);
+    destinationsMap.set(source, destination);
+  });
+
+  return { sourcesMap, destinationsMap };
+}
