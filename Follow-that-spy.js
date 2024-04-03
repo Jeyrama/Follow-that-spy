@@ -28,3 +28,20 @@ Note:
 
 
 // Solution
+
+const findRoutes = routes => {
+  let routeMap = {}
+
+  for([from,to] of routes) routeMap[from] = to
+  
+  for([curr] of routes){
+    const arr = [ curr ]
+    
+    while(curr in routeMap){
+      arr.push(routeMap[curr])
+      curr = routeMap[curr]
+    }
+    
+    if(arr.length === routes.length + 1) return arr.join(', ')
+  }
+}
